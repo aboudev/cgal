@@ -106,7 +106,7 @@ void Scene::save_approximation(const std::string &filename)
   if (m_tris.empty())
     return;
 
-  std::ofstream ofs(filename);
+  std::ofstream ofs(filename.c_str());
   if (!ofs.is_open()) {
     std::cerr << "Error: open " << filename << " failed." << std::endl;
     return;
