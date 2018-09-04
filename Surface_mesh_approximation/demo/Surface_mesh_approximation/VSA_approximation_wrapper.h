@@ -164,19 +164,19 @@ public:
     switch (m_metric) {
       case L21:
         return m_l21_approx->initialize_seeds(
-          CGAL::VSA::parameters::seeding_method(method)
+          CGAL::parameters::seeding_method(method)
             .max_nb_of_proxies(max_nb_of_proxies)
             .min_error_drop(min_error_drop)
             .nb_of_relaxations(nb_relaxations));
       case L2:
         return m_l2_approx->initialize_seeds(
-          CGAL::VSA::parameters::seeding_method(method)
+          CGAL::parameters::seeding_method(method)
             .max_nb_of_proxies(max_nb_of_proxies)
             .min_error_drop(min_error_drop)
             .nb_of_relaxations(nb_relaxations));
       case Compact:
         return m_iso_approx->initialize_seeds(
-          CGAL::VSA::parameters::seeding_method(method)
+          CGAL::parameters::seeding_method(method)
             .max_nb_of_proxies(max_nb_of_proxies)
             .min_error_drop(min_error_drop)
             .nb_of_relaxations(nb_relaxations));
@@ -243,21 +243,21 @@ public:
     switch (m_metric) {
       case L21:
         return m_l21_approx->extract_mesh(
-          CGAL::VSA::parameters::subdivision_ratio(subdivision_ratio).
+          CGAL::parameters::subdivision_ratio(subdivision_ratio).
           relative_to_chord(relative_to_chord).
           with_dihedral_angle(with_dihedral_angle).
           optimize_anchor_location(optimize_anchor_location).
           pca_plane(pca_plane));
       case L2:
         return m_l2_approx->extract_mesh(
-          CGAL::VSA::parameters::subdivision_ratio(subdivision_ratio).
+          CGAL::parameters::subdivision_ratio(subdivision_ratio).
           relative_to_chord(relative_to_chord).
           with_dihedral_angle(with_dihedral_angle).
           optimize_anchor_location(optimize_anchor_location).
           pca_plane(pca_plane));
       case Compact:
         return m_iso_approx->extract_mesh(
-          CGAL::VSA::parameters::subdivision_ratio(subdivision_ratio).
+          CGAL::parameters::subdivision_ratio(subdivision_ratio).
           relative_to_chord(relative_to_chord).
           with_dihedral_angle(with_dihedral_angle).
           optimize_anchor_location(optimize_anchor_location).
