@@ -238,8 +238,8 @@ void MainWindow::on_actionApproximation_triggered()
   if (dial.exec() == QDialog::Accepted) {
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    CGAL::VSA::Seeding_method method = dial.method_random->isChecked() ? CGAL::VSA::Random : (
-      dial.method_incremental->isChecked() ? CGAL::VSA::Incremental : CGAL::VSA::Hierarchical);
+    CGAL::VSA::Seeding_method method = dial.method_random->isChecked() ? CGAL::VSA::RANDOM : (
+      dial.method_incremental->isChecked() ? CGAL::VSA::INCREMENTAL : CGAL::VSA::HIERARCHICAL);
     std::size_t nb_relaxations = dial.nb_relaxations->value();
     std::size_t nb_iterations = dial.nb_iterations->value();
     m_pScene->initialize_seeds(method,
@@ -269,8 +269,8 @@ void MainWindow::on_actionSeeding_triggered()
   if (dial.exec() == QDialog::Accepted) {
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    CGAL::VSA::Seeding_method method = dial.method_random->isChecked() ? CGAL::VSA::Random : (
-      dial.method_incremental->isChecked() ? CGAL::VSA::Incremental : CGAL::VSA::Hierarchical);
+    CGAL::VSA::Seeding_method method = dial.method_random->isChecked() ? CGAL::VSA::RANDOM : (
+      dial.method_incremental->isChecked() ? CGAL::VSA::INCREMENTAL : CGAL::VSA::HIERARCHICAL);
     std::size_t nb_relaxations = dial.nb_relaxations->value();
     std::size_t nb_iterations = dial.nb_iterations->value();
     m_pScene->initialize_seeds(method,
