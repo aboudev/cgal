@@ -1,0 +1,108 @@
+#include <iostream>
+#include <fstream>
+
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Polyhedron_3.h>
+
+#include <CGAL/property_map.h>
+#include <CGAL/Variational_shape_approximation.h>
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
+typedef Kernel::FT FT;
+typedef Kernel::Vector_3 Vector;
+typedef Kernel::Point_3 Point;
+
+typedef CGAL::Polyhedron_3<Kernel> Polyhedron;
+typedef Polyhedron::Facet_handle Facet_handle;
+typedef Polyhedron::Halfedge_handle Halfedge_handle;
+typedef Polyhedron::Facet_iterator Facet_iterator;
+
+typedef boost::property_map<Polyhedron, boost::vertex_point_t>::type Vertex_point_map;
+typedef boost::associative_property_map<std::map<Facet_handle, FT> > Face_area_map;
+typedef boost::associative_property_map<std::map<Facet_handle, Point> > Face_center_map;
+
+// user-defined "compact" error metric using type Point_3 as proxy
+struct Compact_metric_point_proxy
+{
+  // use point as proxy
+  typedef Point Proxy;
+
+  // we keep a precomputed property map to speed up computations
+  Compact_metric_point_proxy(const Face_center_map &center_pmap_, const Face_area_map &area_pmap_)
+    : center_pmap(center_pmap_), area_pmap(area_pmap_) {}
+
+  // compute and return error from a face to a proxy,
+  // defined as the Euclidean distance between
+  // the face center of mass and proxy point.
+  FT compute_error(const Polyhedron &tm, const Facet_handle &f, const Proxy &px) const {
+    (void)(tm);
+    return FT(std::sqrt(CGAL::to_double(
+      CGAL::squared_distance(center_pmap[f], px))));
+  }
+
+  // template functor to compute a best-fit 
+  // proxy from a range of faces
+  template <typename FaceRange>
+  Proxy fit_proxy(const FaceRange &faces, const Polyhedron &tm) const {
+    (void)(tm);
+    // fitting center
+    Vector center = CGAL::NULL_VECTOR;
+    FT sum_areas = FT(0.0);
+    BOOST_FOREACH(const Facet_handle &f, faces) {
+      center = center + (center_pmap[f] - CGAL::ORIGIN) * area_pmap[f];
+      sum_areas += area_pmap[f];
+    }
+    // deal with case where sum = 0
+    if (center == CGAL::NULL_VECTOR || sum_areas <= FT(0.0)) {
+      std::cerr << "Error: degenerate geometry." << std::endl;
+      std::exit(EXIT_FAILURE);
+    }
+    center = center / sum_areas;
+    return CGAL::ORIGIN + center;
+  }
+
+  const Face_center_map center_pmap;
+  const Face_area_map area_pmap;
+};
+
+typedef CGAL::Variational_shape_approximation<
+  Polyhedron, Vertex_point_map, Compact_metric_point_proxy> Approximation;
+
+int main()
+{
+  // reads input mesh
+  Polyhedron input;
+  std::ifstream file("data/bear.off");
+  file >> input;
+
+  // constructs precomputed face normal and area map
+  std::map<Facet_handle, FT> face_areas;
+  std::map<Facet_handle, Point> face_centers;
+  for(Facet_iterator fitr = input.facets_begin(); fitr != input.facets_end(); ++fitr) {
+    const Halfedge_handle he = fitr->halfedge();
+    const Point &p0 = he->opposite()->vertex()->point();
+    const Point &p1 = he->vertex()->point();
+    const Point &p2 = he->next()->vertex()->point();
+    const FT area = std::sqrt(CGAL::to_double(CGAL::squared_area(p0, p1, p2)));
+    const Point barycenter = CGAL::centroid(p0, p1, p2);
+    face_areas.insert(std::pair<Facet_handle, FT>(fitr, area));
+    face_centers.insert(std::pair<Facet_handle, Point>(fitr, barycenter));
+  }
+  Face_area_map area_pmap(face_areas);
+  Face_center_map center_pmap(face_centers);
+
+  // error metric and fitting function
+  Compact_metric_point_proxy error_metric(center_pmap, area_pmap);
+
+  // creates compact metric approximation algorithm instance
+  Approximation approx(input,
+    get(boost::vertex_point, const_cast<Polyhedron &>(input)),
+    error_metric);
+
+  // approximates via 200 proxies and 30 iterations
+  approx.initialize_seeds(CGAL::VSA::parameters::seeding_method(CGAL::VSA::HIERARCHICAL)
+    .max_nb_of_proxies(200));
+  approx.run(30);
+
+  return EXIT_SUCCESS;
+}
