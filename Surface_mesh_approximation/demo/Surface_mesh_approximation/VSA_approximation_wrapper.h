@@ -2,7 +2,7 @@
 #define VSA_APPROXIMAITON_WRAPPER_H
 
 #include <CGAL/Variational_shape_approximation.h>
-#include <CGAL/L2_metric_plane_proxy.h>
+#include <CGAL/VSA/L2_metric_plane_proxy.h>
 #include <CGAL/property_map.h>
 
 template <typename TriangleMesh, typename GeomTraits>
