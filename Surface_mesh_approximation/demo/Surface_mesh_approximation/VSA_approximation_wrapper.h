@@ -165,21 +165,21 @@ public:
       case L21:
         return m_l21_approx->initialize_seeds(
           CGAL::parameters::seeding_method(method)
-            .max_nb_of_proxies(max_nb_of_proxies)
+            .max_number_of_proxies(max_nb_of_proxies)
             .min_error_drop(min_error_drop)
-            .nb_of_relaxations(nb_relaxations));
+            .number_of_relaxations(nb_relaxations));
       case L2:
         return m_l2_approx->initialize_seeds(
           CGAL::parameters::seeding_method(method)
-            .max_nb_of_proxies(max_nb_of_proxies)
+            .max_number_of_proxies(max_nb_of_proxies)
             .min_error_drop(min_error_drop)
-            .nb_of_relaxations(nb_relaxations));
+            .number_of_relaxations(nb_relaxations));
       case Compact:
         return m_iso_approx->initialize_seeds(
           CGAL::parameters::seeding_method(method)
-            .max_nb_of_proxies(max_nb_of_proxies)
+            .max_number_of_proxies(max_nb_of_proxies)
             .min_error_drop(min_error_drop)
-            .nb_of_relaxations(nb_relaxations));
+            .number_of_relaxations(nb_relaxations));
     }
     return 0;
   }
