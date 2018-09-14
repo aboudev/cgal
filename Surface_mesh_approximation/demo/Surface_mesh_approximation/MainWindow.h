@@ -13,7 +13,7 @@ namespace Ui {
 }
 
 
-class MainWindow : 
+class MainWindow :
   public CGAL::Qt::DemosMainWindow
 {
   Q_OBJECT
