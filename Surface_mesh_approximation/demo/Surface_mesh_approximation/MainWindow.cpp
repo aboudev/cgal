@@ -15,7 +15,7 @@
 
 #include "dialSettings.h"
 
-#include <QMimeData> 
+#include <QMimeData>
 
 
 MainWindow::MainWindow(QWidget* parent)
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget* parent)
   // saves some pointers from ui, for latter use.
   m_pViewer = ui->viewer;
 
-  // does not save the state of the viewer 
+  // does not save the state of the viewer
   m_pViewer->setStateFileName(QString::null);
 
   // accepts drop events
@@ -66,7 +66,7 @@ void MainWindow::updateViewerBBox()
   const double xmax = bbox.xmax();
   const double ymax = bbox.ymax();
   const double zmax = bbox.zmax();
-  qglviewer::Vec 
+  qglviewer::Vec
     vec_min(xmin, ymin, zmin),
     vec_max(xmax, ymax, zmax);
   m_pViewer->setSceneBoundingBox(vec_min,vec_max);
@@ -148,7 +148,7 @@ void MainWindow::on_actionLoadPolyhedron_triggered()
   QSettings settings;
   QString directory = settings.value("OFF open directory",
     QDir::current().dirName()).toString();
-  QStringList filenames = 
+  QStringList filenames =
     QFileDialog::getOpenFileNames(this,
     tr("Load polyhedron..."),
     directory,
@@ -225,7 +225,7 @@ void MainWindow::on_actionCompact_triggered()
   ui->actionViewProxies->setChecked(false);
   ui->actionViewAnchors->setChecked(false);
   ui->actionViewApproximation->setChecked(false);
-  
+
   m_pScene->set_metric(2);
   m_pViewer->update();
 }
